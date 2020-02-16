@@ -1,0 +1,23 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"files.exclude": {
+			"**/.vs": true,
+			"cppcheck-build": true
+		},
+		"todo-tree.excludeGlobs": [
+			"**/sqlite/*.*",
+			"**/mavlink/*/*.*",
+			"**/mavlink/*/*/*.*"
+		],
+		"todo-tree.filtering.excludeGlobs": [
+			"**/sqlite/*.*",
+			"**/mavlink/*/*.*",
+			"**/mavlink/*/*/*.*"
+		]
+	}
+}

@@ -1,0 +1,143 @@
+// Available variables which can be used inside of strings.
+// ${workspaceRoot}: the root folder of the team        
+// ${file}: the current opened file                     
+// ${fileBasename}: the current opened file's basename 
+// ${fileDirname}: the current opened file's dirname    
+// ${fileExtname}: the current opened file's extension  
+// ${cwd}: the current working directory of the spawned process
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch simple_example",
+            //"preLaunchTask": "build",
+            "type": "cppdbg",
+            "request": "launch",
+            // "program": "${fileDirname}/build/${fileBasenameNoExtension}.exe",
+            "program": "${workspaceFolder}/build/examples/simple_example.exe",
+            "args": [
+                "3"
+            ],
+            "stopAtEntry": true,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "miDebuggerPath": "gdb.exe",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+        {
+            "name": "Launch msg decoder",
+            //"preLaunchTask": "build",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/tools/msg_decoder/decoder.exe",
+            "args": [
+                "-j 123.json"
+            ],
+            "stopAtEntry": true,
+            "cwd": "${workspaceFolder}/build/tools/msg_decoder",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "miDebuggerPath": "gdb.exe",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+        {
+            "name": "Launch libserialport_example",
+            //"preLaunchTask": "build",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/examples/libserialport_example.exe",
+            "args": [],
+            "stopAtEntry": true,
+            "cwd": "${workspaceFolder}/build/examples",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "miDebuggerPath": "gdb.exe",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+        {
+            "name": "Launch depth_hold",
+            //"preLaunchTask": "build",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/examples/depth_hold",
+            "args": [],
+            "stopAtEntry": true,
+            "cwd": "${workspaceFolder}/build/examples",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "miDebuggerPath": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+        {
+            "name": "Launch depth_pid",
+            //"preLaunchTask": "build",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/examples/depth_pid",
+            "args": [],
+            "stopAtEntry": true,
+            "cwd": "${workspaceFolder}/build/examples",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "miDebuggerPath": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+        {
+            "name": "Launch simple_example(Linux)",
+            //"preLaunchTask": "build",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/examples/simple_example",
+            "args": [],
+            "stopAtEntry": true,
+            "cwd": "${workspaceFolder}/build/examples",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "miDebuggerPath": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        }
+    ]
+}
