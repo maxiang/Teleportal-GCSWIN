@@ -1,19 +1,19 @@
 ##NEW BUILD INSTRUCTIONS
 
-# update repo data
+#update repo data
 pacman -Syu
-# base
+#base
 pacman -S base-devel git
-# install Qt
+#install Qt
 pacman -S mingw-w64-i686-qt-creator mingw-w64-x86_64-qt-creator
-# install GStreamer
+#install GStreamer
 pacman -S mingw64/mingw-w64-x86_64-gstreamer mingw64/mingw-w64-x86_64-gst-plugins-bad mingw64/mingw-w64-x86_64-gst-plugins-base mingw64/mingw-w64-x86_64-gst-plugins-good mingw64/mingw-w64-x86_64-gst-plugins-ugly mingw64/mingw-w64-x86_64-gst-rtsp-server mingw64/mingw-w64-x86_64-gst-libav
 
-# Added new command lines.
-# Install gcc (4.9.1)
+#Added new command lines.
+#Install gcc (4.9.1)
 pacman -S mingw-w64-x86_64-gcc
 
-# Install ninja, cmake
+#Install ninja, cmake
 pacman -S mingw-w64-x86_64-ninja mingw-w64-x86_64-cmake
 
 2. 
