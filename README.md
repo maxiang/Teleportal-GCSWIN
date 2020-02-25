@@ -1,5 +1,6 @@
 ##NEW BUILD INSTRUCTIONS
 
+``` bash
 # update repo data
 pacman -Syu
 # base
@@ -28,14 +29,14 @@ cmake -D CMAKE_CXX_COMPILER=g++.exe -G Ninja .. // debug
 cmake -D CMAKE_CXX_COMPILER=g++.exe -DCMAKE_BUILD_TYPE=Release -G Ninja .. // release
 cd ..
 ninja 
+```
 
 
 
 
 
 
-
-## OLD Build  
+## OLD Build Instructions  
 
 only support msys2.
 
