@@ -1,4 +1,4 @@
-##NEW BUILD INSTRUCTIONS
+## NEW BUILD INSTRUCTIONS
 
 ``` bash
 # update repo data
