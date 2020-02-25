@@ -29,6 +29,8 @@ MainWindow::MainWindow(QWidget *parent)
     pressedKey.Down = false;
     pressedKey.Left = false;
     pressedKey.Down = false;
+	
+	firstRun = false;  // first run flag 2020/02/20
 
     keyControlValue.forward = 400;
     keyControlValue.backward = -400;
@@ -47,12 +49,26 @@ MainWindow::MainWindow(QWidget *parent)
     AS::as_api_init(ip.c_str(), F_THREAD_NAMED_VAL_FLOAT | F_STORAGE_NONE);
 
     setupTimer();
-
+	
     videoReceiver->start(ui->quickWidget);
+	
+	// 2020/02/20
+	// On Startup - Arm & Stabilise Mode
+    armCheckBox->setChecked(true);
+    modeComboBox->setCurrentIndex(1);		
+	armCheckBox_stateChanged(Qt::Checked);
+	modeComboBox_currentIndexChanged(1);	
 }
 
 MainWindow::~MainWindow()
 {
+	// 2020/02/20
+	// On Shutdown - DisArm & Manual Mode
+	armCheckBox->setChecked(false);
+    modeComboBox->setCurrentIndex(1);
+	armCheckBox_stateChanged(Qt::Unchecked);
+	modeComboBox_currentIndexChanged(0);	
+		
     delete ui;
 }
 
@@ -97,9 +113,8 @@ void MainWindow::setupToolBars()
     yawLabelValue->setFixedWidth(50);
     pitchLabelValue->setFixedWidth(50);
     rollLabelValue->setFixedWidth(50);
-    depthLabelValue->setFixedWidth(50);
-
-    
+    depthLabelValue->setFixedWidth(50);	
+   
     QWidget *spacer = new QWidget(this);
     spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     ui->statusToolBar->addWidget(spacer);
@@ -140,6 +155,17 @@ void MainWindow::updateVehicleData()
         // qDebug() << "vehicle: " << currentVehicle << "is not ready!";
         return;
     }
+
+	if (!firstRun)
+	{
+		// 2020/02/20
+		// On Startup - Arm & Stabilise Mode
+		armCheckBox->setChecked(true);
+		modeComboBox->setCurrentIndex(1);		
+		armCheckBox_stateChanged(Qt::Checked);
+		modeComboBox_currentIndexChanged(1);	
+		firstRun = true;
+	}
 
     AS::as_api_get_vehicle_data2(currentVehicle, vehicle_data);
 

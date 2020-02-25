@@ -59,6 +59,7 @@ private:
     QTimer vehicleDataUpdateTimer;
     QTimer manualControlTimer;
 
+	bool	firstRun; // first run flag 2020/02/20
 
     typedef struct
     {
