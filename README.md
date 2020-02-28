@@ -22,6 +22,7 @@ Close the msys2 shell and add c:\msys64\mingw64\bin into the PATH environment va
 
 Windows: Control Panel > System and Security > System > Advanced System Settings > Environment Variables... > Edit User variable Path
 
+OPEN msys Mingw64
 3. 
 cd {directory path}
 mkdir build && cd build
