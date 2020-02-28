@@ -52,20 +52,22 @@ MainWindow::MainWindow(QWidget *parent)
 	
     videoReceiver->start(ui->quickWidget);
 	
-	// 2020/02/20
+	// 2020/02/20 KIM V
 	// On Startup - Arm & Stabilise Mode
-    armCheckBox->setChecked(true);
-    modeComboBox->setCurrentIndex(1);		
-	armCheckBox_stateChanged(Qt::Checked);
-	modeComboBox_currentIndexChanged(1);	
+	// ADAM: I commented out this code and found no effect to application? Leftover code from test?
+    // armCheckBox->setChecked(true);
+    // modeComboBox->setCurrentIndex(1);		
+	// armCheckBox_stateChanged(Qt::Checked);
+	// modeComboBox_currentIndexChanged(1);	
 }
 
 MainWindow::~MainWindow()
 {
-	// 2020/02/20
+	// 2020/02/20 KIM V
 	// On Shutdown - DisArm & Manual Mode
+	// ADAM: This works well I think or could use manual control buttons
 	armCheckBox->setChecked(false);
-    modeComboBox->setCurrentIndex(1);
+    	modeComboBox->setCurrentIndex(1);
 	armCheckBox_stateChanged(Qt::Unchecked);
 	modeComboBox_currentIndexChanged(0);	
 		
@@ -158,13 +160,14 @@ void MainWindow::updateVehicleData()
 
 	if (!firstRun)
 	{
-		// 2020/02/20
+		// 2020/02/20 KIM V
 		// On Startup - Arm & Stabilise Mode
-		armCheckBox->setChecked(true);
-		modeComboBox->setCurrentIndex(1);		
-		armCheckBox_stateChanged(Qt::Checked);
-		modeComboBox_currentIndexChanged(1);	
-		firstRun = true;
+		// ADAM: This works well I think or could use manual control buttons
+		 armCheckBox->setChecked(true);
+		 modeComboBox->setCurrentIndex(1);		
+		 armCheckBox_stateChanged(Qt::Checked);
+		 modeComboBox_currentIndexChanged(1);	
+		 firstRun = true;
 	}
 
     AS::as_api_get_vehicle_data2(currentVehicle, vehicle_data);
@@ -203,7 +206,9 @@ void MainWindow::manualControl()
                                   manual_control.buttons, currentVehicle);
 
         // qDebug() << "manual control:" << manual_control.x << manual_control.y << manual_control.z << manual_control.r;
-        manual_control.buttons = 0;
+        //ADAM - commented out this code - this is a bug from original dev
+	//
+	//manual_control.buttons = 0;
     }
 }
 
@@ -279,16 +284,30 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         pressedKey.Right = true;
         manual_control.y = keyControlValue.rightward;
     }
-    // else if (event->key() == Qt::Key_R)
-    // {
-    //     qDebug() << "You Pressed Key R";
-    //     manual_control.buttons = 22;
-    // }
-    // else if (event->key() == Qt::Key_F)
-    // {
-    //     qDebug() << "You Pressed Key F";
-    //     manual_control.buttons = 23;
-    // }
+     
+	//ADAM- Added new keys for Camera Tilt and Lights
+	//
+	//
+	else if (event->key() == Qt::Key_R)
+     {
+         qDebug() << "You Pressed Key R";
+         manual_control.buttons = 1024;
+     }
+     else if (event->key() == Qt::Key_F)
+     {
+         qDebug() << "You Pressed Key F";
+         manual_control.buttons = 512;
+     }
+   else if (event->key() == Qt::Key_Equal)
+     {
+         qDebug() << "You Pressed Key Plus";
+         manual_control.buttons = 16384;
+     }
+     else if (event->key() == Qt::Key_Minus)
+     {
+         qDebug() << "You Pressed Key Minus";
+         manual_control.buttons = 8192;
+     }
     else
     {
         qDebug() << "You Pressed NOT supported Key";
@@ -410,6 +429,33 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event)
             manual_control.y = 0;
         }
         pressedKey.Right = false;
+    }
+//ADAM: Added new buttons
+//
+//
+ else if (event->key() == Qt::Key_R)
+    {
+        qDebug() << "You Released Key R";
+        manual_control.buttons = 0;
+        
+    }
+ else if (event->key() == Qt::Key_F)
+    {
+        qDebug() << "You Released Key F";
+        manual_control.buttons = 0;
+        
+    }
+ else if (event->key() == Qt::Key_Equal)
+    {
+        qDebug() << "You Released Key Plus";
+        manual_control.buttons = 0;
+        
+    }
+ else if (event->key() == Qt::Key_Minus)
+    {
+        qDebug() << "You Released Key Minus";
+        manual_control.buttons = 0;
+        
     }
     else
     {
