@@ -1,5 +1,6 @@
-##NEW BUILD INSTRUCTIONS
+## NEW BUILD INSTRUCTIONS
 
+``` bash
 # update repo data
 pacman -Syu
 # base
@@ -21,6 +22,7 @@ Close the msys2 shell and add c:\msys64\mingw64\bin into the PATH environment va
 
 Windows: Control Panel > System and Security > System > Advanced System Settings > Environment Variables... > Edit User variable Path
 
+OPEN msys Mingw64
 3. 
 cd {directory path}
 mkdir build && cd build
@@ -28,14 +30,14 @@ cmake -D CMAKE_CXX_COMPILER=g++.exe -G Ninja .. // debug
 cmake -D CMAKE_CXX_COMPILER=g++.exe -DCMAKE_BUILD_TYPE=Release -G Ninja .. // release
 cd ..
 ninja 
+```
 
 
 
 
 
 
-
-## OLD Build  
+## OLD Build Instructions  
 
 only support msys2.
 
