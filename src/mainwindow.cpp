@@ -32,14 +32,14 @@ MainWindow::MainWindow(QWidget *parent)
 	
 	firstRun = false;  // first run flag 2020/02/20
 
-    keyControlValue.forward = 400;
-    keyControlValue.backward = -400;
-    keyControlValue.leftward = -400;
-    keyControlValue.rightward = 400;
-    keyControlValue.upward = 700;
-    keyControlValue.downward = 300;
-    keyControlValue.turnLeft = -400;
-    keyControlValue.turnRight = 400;
+    keyControlValue.forward = 600;
+    keyControlValue.backward = -600;
+    keyControlValue.leftward = -600;
+    keyControlValue.rightward = 600;
+    keyControlValue.upward = 800;
+    keyControlValue.downward = 200;
+    keyControlValue.turnLeft = -600;
+    keyControlValue.turnRight = 600;
 
     on_actionVideo_triggered();
 
@@ -55,8 +55,8 @@ MainWindow::MainWindow(QWidget *parent)
 	// 2020/02/20 KIM V
 	// On Startup - Arm & Stabilise Mode
 	// ADAM: I commented out this code and found no effect to application? Leftover code from test?
-    // armCheckBox->setChecked(true);
-    // modeComboBox->setCurrentIndex(1);		
+     // armCheckBox->setChecked(true);
+     // modeComboBox->setCurrentIndex(1);		
 	// armCheckBox_stateChanged(Qt::Checked);
 	// modeComboBox_currentIndexChanged(1);	
 }
@@ -66,10 +66,10 @@ MainWindow::~MainWindow()
 	// 2020/02/20 KIM V
 	// On Shutdown - DisArm & Manual Mode
 	// ADAM: This works well I think or could use manual control buttons
-	armCheckBox->setChecked(false);
-    	modeComboBox->setCurrentIndex(1);
-	armCheckBox_stateChanged(Qt::Unchecked);
-	modeComboBox_currentIndexChanged(0);	
+	 armCheckBox->setChecked(false);
+    	 modeComboBox->setCurrentIndex(1);
+	 armCheckBox_stateChanged(Qt::Unchecked);
+	 modeComboBox_currentIndexChanged(0);	
 		
     delete ui;
 }
@@ -301,12 +301,27 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
    else if (event->key() == Qt::Key_Equal)
      {
          qDebug() << "You Pressed Key Plus";
-         manual_control.buttons = 16384;
+          manual_control.buttons = 16384;
      }
      else if (event->key() == Qt::Key_Minus)
      {
          qDebug() << "You Pressed Key Minus";
-         manual_control.buttons = 8192;
+          manual_control.buttons = 8192;
+     }
+	 else if (event->key() == Qt::Key_1)
+     {
+         qDebug() << "You Pressed Key 1";
+          manual_control.buttons = 2;
+     }
+ 	else if (event->key() == Qt::Key_2)
+     {
+         qDebug() << "You Pressed Key 2";
+          manual_control.buttons = 8;
+     }
+	else if (event->key() == Qt::Key_3)
+     {
+         qDebug() << "You Pressed Key 3";
+          manual_control.buttons = 4;
      }
     else
     {
@@ -457,6 +472,24 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event)
         manual_control.buttons = 0;
         
     }
+ else if (event->key() == Qt::Key_1)
+    {
+        qDebug() << "You Released Key 1";
+        manual_control.buttons = 0;
+        
+    }
+ else if (event->key() == Qt::Key_2)
+    {
+        qDebug() << "You Released Key 2";
+        manual_control.buttons = 0;
+        
+    }
+ else if (event->key() == Qt::Key_3)
+    {
+        qDebug() << "You Released Key 3";
+        manual_control.buttons = 0;
+        
+    }
     else
     {
         qDebug() << "You Released NOT supported Key";
@@ -497,15 +530,18 @@ void MainWindow::modeComboBox_currentIndexChanged(int index)
     switch (index)
     {
     case 0:
-        AS::as_api_set_mode(currentVehicle, AS::MANUAL);
+        // AS::as_api_set_mode(currentVehicle, AS::MANUAL);
+	manual_control.buttons = 2;
         break;
 
     case 1:
-        AS::as_api_set_mode(currentVehicle, AS::STABILIZE);
+        // AS::as_api_set_mode(currentVehicle, AS::STABILIZE);
+	manual_control.buttons = 8;
         break;
 
     case 2:
-        AS::as_api_set_mode(currentVehicle, AS::ALT_HOLD);
+        // AS::as_api_set_mode(currentVehicle, AS::ALT_HOLD);
+	manual_control.buttons = 4;
         break;
 
     default:
