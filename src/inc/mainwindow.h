@@ -37,6 +37,8 @@ private slots:
 
     void on_actionMenu_triggered();
 
+    void on_modeBt_clicked();               //Changing Combobox to Button
+
     void modeComboBox_currentIndexChanged(int index);
 
     void armCheckBox_stateChanged(int state);
@@ -47,7 +49,8 @@ private:
     VideoReceiver *videoReceiver;
 
     QCheckBox *armCheckBox;
-    QComboBox *modeComboBox;
+    QPushButton *modeComboBox;               //Changing Combobox to Button
+    //QComboBox *modeComboBox;
     
     // status toolbar
     QLabel *yawLabelValue;
@@ -58,6 +61,9 @@ private:
     // timer
     QTimer vehicleDataUpdateTimer;
     QTimer manualControlTimer;
+
+    int m_modeIndex; 
+    uint IdleTime;                        //Changin Combobox to Button
 
 	bool	firstRun; // first run flag 2020/02/20
 

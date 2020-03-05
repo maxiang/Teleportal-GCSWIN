@@ -15,6 +15,8 @@ MainWindow::MainWindow(QWidget *parent)
     QCoreApplication::setOrganizationDomain("");
     QCoreApplication::setApplicationName("Teleportal");
 
+    //SETUP STARTING VALUES
+
     manual_control.x = 0;
     manual_control.y = 0;
     manual_control.z = 500;
@@ -32,19 +34,23 @@ MainWindow::MainWindow(QWidget *parent)
 	
 	firstRun = false;  // first run flag 2020/02/20
 
-    keyControlValue.forward = 600;
-    keyControlValue.backward = -600;
-    keyControlValue.leftward = -600;
-    keyControlValue.rightward = 600;
-    keyControlValue.upward = 800;
-    keyControlValue.downward = 200;
-    keyControlValue.turnLeft = -600;
-    keyControlValue.turnRight = 600;
+    keyControlValue.forward = 400;
+    keyControlValue.backward = -400;
+    keyControlValue.leftward = -400;
+    keyControlValue.rightward = 400;
+    keyControlValue.upward = 700;
+    keyControlValue.downward = 300;
+    keyControlValue.turnLeft = -400;
+    keyControlValue.turnRight = 400;
+
+    m_modeIndex = 1;  
+    IdleTime = 1;                          //Changing Combobox to Buttton
 
     on_actionVideo_triggered();
 
     setupToolBars();
-
+    setFocusPolicy(Qt::StrongFocus);    //FOCUS FIX
+    setFocus();                         //FOCUS FIX
     std::string ip("192.168.2.");
     AS::as_api_init(ip.c_str(), F_THREAD_NAMED_VAL_FLOAT | F_STORAGE_NONE);
 
@@ -52,24 +58,18 @@ MainWindow::MainWindow(QWidget *parent)
 	
     videoReceiver->start(ui->quickWidget);
 	
-	// 2020/02/20 KIM V
-	// On Startup - Arm & Stabilise Mode
-	// ADAM: I commented out this code and found no effect to application? Leftover code from test?
-     // armCheckBox->setChecked(true);
-     // modeComboBox->setCurrentIndex(1);		
-	// armCheckBox_stateChanged(Qt::Checked);
-	// modeComboBox_currentIndexChanged(1);	
 }
 
 MainWindow::~MainWindow()
 {
-	// 2020/02/20 KIM V
-	// On Shutdown - DisArm & Manual Mode
-	// ADAM: This works well I think or could use manual control buttons
-	 armCheckBox->setChecked(false);
-    	 modeComboBox->setCurrentIndex(1);
-	 armCheckBox_stateChanged(Qt::Unchecked);
-	 modeComboBox_currentIndexChanged(0);	
+	// On Shutdown - DisArm Vehicle & Set Manual Mode
+
+	armCheckBox->setChecked(false);
+    //modeComboBox->setCurrentIndex(1);
+    m_modeIndex = 0;                                     //Changing Combobox for Button
+	armCheckBox_stateChanged(Qt::Unchecked);
+	//modeComboBox_currentIndexChanged(0);	
+    modeComboBox_currentIndexChanged(m_modeIndex);      //Changing Combobox for Button
 		
     delete ui;
 }
@@ -78,10 +78,12 @@ void MainWindow::setupToolBars()
 {
     QList<QAction *> actionListDisarm;
     // actionListDisarm.append(ui->actionDisarm);
+    ui->vehicleToolBar->setFocusPolicy(Qt::NoFocus);        //FOCUS FIX
     ui->vehicleToolBar->addActions(actionListDisarm);
 
     armCheckBox = new QCheckBox(this);
     armCheckBox->setText("Arm");
+    armCheckBox->setFocusPolicy(Qt::NoFocus);               //FOCUS FIX
     ui->vehicleToolBar->addWidget(armCheckBox);
     QObject::connect(armCheckBox, &QCheckBox::stateChanged,
                      this, &MainWindow::armCheckBox_stateChanged);
@@ -92,25 +94,50 @@ void MainWindow::setupToolBars()
     modeLable->setText("Mode: ");
     ui->vehicleToolBar->addWidget(modeLable);
 
-    modeComboBox = new QComboBox(this);
-    modeComboBox->addItem("Manual");
-    modeComboBox->addItem("Stabilize");
-    modeComboBox->addItem("Depth Hold");
+    //Vehicle Mode Change using ComboBox
+
+    // modeComboBox = new QComboBox(this);
+    // modeComboBox->addItem("Manual");
+    // modeComboBox->addItem("Stabilize");
+    // modeComboBox->addItem("Depth Hold");
+    // modeComboBox->setFocusPolicy(Qt::NoFocus);               //FOCUS FIX
+    // ui->vehicleToolBar->addWidget(modeComboBox);
+    // QObject::connect(modeComboBox, 
+    //                 static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+    //                 this, 
+    //                 &MainWindow::modeComboBox_currentIndexChanged);
+
+    //Vehicle Mode Change using Button
+    modeComboBox = new QPushButton(this);
+    modeComboBox->setText("Stabilise");
+    modeComboBox->setFocusPolicy(Qt::NoFocus);
+    modeComboBox->show();
+    connect (modeComboBox , SIGNAL(clicked()) , this , SLOT(on_modeBt_clicked()) );
     ui->vehicleToolBar->addWidget(modeComboBox);
-    QObject::connect(modeComboBox, 
-                     static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
-                     this, 
-                     &MainWindow::modeComboBox_currentIndexChanged);
+   
+
+
 
     // status toolbar
     QLabel *yawLabel = new QLabel("Yaw: ", this);
+    yawLabel->setFocusPolicy(Qt::NoFocus);          //FOCUS FIX
     yawLabelValue = new QLabel("0.00", this);
+    yawLabelValue->setFocusPolicy(Qt::NoFocus);     //FOCUS FIX
+
     QLabel *pitchLabel = new QLabel("Pitch: ", this);
+    pitchLabel->setFocusPolicy(Qt::NoFocus);        //FOCUS FIX
     pitchLabelValue = new QLabel("0.00", this);
+    pitchLabelValue->setFocusPolicy(Qt::NoFocus);      //FOCUS FIX
+
     QLabel *rollLabel = new QLabel("Roll: ", this);
+    rollLabel->setFocusPolicy(Qt::NoFocus);             //FOCUS FIX
     rollLabelValue = new QLabel("0.00", this);
+    rollLabelValue->setFocusPolicy(Qt::NoFocus);        //FOCUS FIX
+
     QLabel *depthLabel = new QLabel("Depth: ", this);
+    depthLabel->setFocusPolicy(Qt::NoFocus);            //FOCUS FIX
     depthLabelValue = new QLabel("0.00", this);
+    depthLabelValue->setFocusPolicy(Qt::NoFocus);       //FOCUS FIX
 
     yawLabelValue->setFixedWidth(50);
     pitchLabelValue->setFixedWidth(50);
@@ -118,7 +145,9 @@ void MainWindow::setupToolBars()
     depthLabelValue->setFixedWidth(50);	
    
     QWidget *spacer = new QWidget(this);
+    spacer->setFocusPolicy(Qt::NoFocus);                //FOCUS FIX
     spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    ui->statusToolBar->setFocusPolicy(Qt::NoFocus);     //FOCUS FIX
     ui->statusToolBar->addWidget(spacer);
 
     ui->statusToolBar->addWidget(yawLabel);
@@ -137,6 +166,16 @@ void MainWindow::setupToolBars()
     ui->statusToolBar->addWidget(bannerLabel);
 
     ui->menuPage->setStyleSheet("border-image: url(:/assets/keyboardControls.png);");
+}
+
+
+        //Changing from ComboBox to Button
+void MainWindow::on_modeBt_clicked(){
+
+    m_modeIndex ++;
+    m_modeIndex %= 3;
+
+    modeComboBox_currentIndexChanged(m_modeIndex);
 }
 
 void MainWindow::setupTimer()
@@ -160,14 +199,19 @@ void MainWindow::updateVehicleData()
 
 	if (!firstRun)
 	{
-		// 2020/02/20 KIM V
-		// On Startup - Arm & Stabilise Mode
-		// ADAM: This works well I think or could use manual control buttons
-		 armCheckBox->setChecked(true);
-		 modeComboBox->setCurrentIndex(1);		
-		 armCheckBox_stateChanged(Qt::Checked);
-		 modeComboBox_currentIndexChanged(1);	
-		 firstRun = true;
+		// On Startup - Arm Vehicle & Set Stabilise Mode
+		
+        // Using Combobox
+		 // armCheckBox->setChecked(true);
+		 // modeComboBox->setCurrentIndex(1);		
+		 // armCheckBox_stateChanged(Qt::Checked);
+		 // modeComboBox_currentIndexChanged(1);
+
+         	armCheckBox->setChecked(true);
+            m_modeIndex = 1;                                     //Changing Combobox for Button
+            armCheckBox_stateChanged(Qt::Checked);
+            modeComboBox_currentIndexChanged(m_modeIndex);      //Changing Combobox for Button
+		    firstRun = true;
 	}
 
     AS::as_api_get_vehicle_data2(currentVehicle, vehicle_data);
@@ -194,10 +238,23 @@ void MainWindow::updateVehicleData()
     pitchLabelValue->setNum(round(pitch * 100) / 100.0);
     yawLabelValue->setNum(round(yaw * 100) / 100.0);
     depthLabelValue->setNum(round(depth * 100) / 100.0);
+
+    //Trying to Disarm after 120sec of idle
+        LASTINPUTINFO LastInput = {}; 
+        LastInput.cbSize = sizeof(LastInput); 
+        ::GetLastInputInfo(&LastInput); 
+        uint IdleTime = (::GetTickCount() - LastInput.dwTime)/1000;
+        if ((IdleTime > 120) == true)
+        {
+            armCheckBox->setChecked(false);
+            armCheckBox_stateChanged(Qt::Unchecked);
+            
+        }
 }
 
 void MainWindow::manualControl()
 {
+        //Main Vehicle Control Loop
     if (armCheckBox->checkState() == Qt::Checked &&
         AS::as_api_check_vehicle(currentVehicle))
     {
@@ -205,10 +262,10 @@ void MainWindow::manualControl()
                                   manual_control.z, manual_control.r,
                                   manual_control.buttons, currentVehicle);
 
+        
         // qDebug() << "manual control:" << manual_control.x << manual_control.y << manual_control.z << manual_control.r;
-        //ADAM - commented out this code - this is a bug from original dev
-	//
-	//manual_control.buttons = 0;
+        
+	       //manual_control.buttons = 0;        //THIS IS BUG FROM ORIGINAL CODE
     }
 }
 
@@ -231,6 +288,7 @@ void MainWindow::resizeEvent(QResizeEvent *event)
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
+        //Keyboard Controls - Key Pressed
     if (event->isAutoRepeat())
     {
         return;
@@ -285,9 +343,8 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         manual_control.y = keyControlValue.rightward;
     }
      
-	//ADAM- Added new keys for Camera Tilt and Lights
-	//
-	//
+	//ADAM- Added new keys for Camera Tilt, Lights, Mode Change
+	
 	else if (event->key() == Qt::Key_R)
      {
          qDebug() << "You Pressed Key R";
@@ -298,30 +355,30 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
          qDebug() << "You Pressed Key F";
          manual_control.buttons = 512;
      }
-   else if (event->key() == Qt::Key_Equal)
+   else if (event->key() == Qt::Key_T)
      {
          qDebug() << "You Pressed Key Plus";
-          manual_control.buttons = 16384;
+         manual_control.buttons = 16384;
      }
-     else if (event->key() == Qt::Key_Minus)
+     else if (event->key() == Qt::Key_G)
      {
          qDebug() << "You Pressed Key Minus";
-          manual_control.buttons = 8192;
+         manual_control.buttons = 8192;
      }
-	 else if (event->key() == Qt::Key_1)
+      else if (event->key() == Qt::Key_1)
      {
          qDebug() << "You Pressed Key 1";
-          manual_control.buttons = 2;
+         manual_control.buttons = 2;
      }
- 	else if (event->key() == Qt::Key_2)
+   else if (event->key() == Qt::Key_2)
      {
          qDebug() << "You Pressed Key 2";
-          manual_control.buttons = 8;
+         manual_control.buttons = 8;
      }
-	else if (event->key() == Qt::Key_3)
+     else if (event->key() == Qt::Key_3)
      {
          qDebug() << "You Pressed Key 3";
-          manual_control.buttons = 4;
+         manual_control.buttons = 4;
      }
     else
     {
@@ -336,6 +393,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 
 void MainWindow::keyReleaseEvent(QKeyEvent *event)
 {
+            //Keyboard Controls - Key Released
     if (event->isAutoRepeat())
     {
         return;
@@ -445,9 +503,7 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event)
         }
         pressedKey.Right = false;
     }
-//ADAM: Added new buttons
-//
-//
+            //ADAM: Added new buttons
  else if (event->key() == Qt::Key_R)
     {
         qDebug() << "You Released Key R";
@@ -460,33 +516,15 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event)
         manual_control.buttons = 0;
         
     }
- else if (event->key() == Qt::Key_Equal)
+ else if (event->key() == Qt::Key_T)
     {
         qDebug() << "You Released Key Plus";
         manual_control.buttons = 0;
         
     }
- else if (event->key() == Qt::Key_Minus)
+ else if (event->key() == Qt::Key_G)
     {
         qDebug() << "You Released Key Minus";
-        manual_control.buttons = 0;
-        
-    }
- else if (event->key() == Qt::Key_1)
-    {
-        qDebug() << "You Released Key 1";
-        manual_control.buttons = 0;
-        
-    }
- else if (event->key() == Qt::Key_2)
-    {
-        qDebug() << "You Released Key 2";
-        manual_control.buttons = 0;
-        
-    }
- else if (event->key() == Qt::Key_3)
-    {
-        qDebug() << "You Released Key 3";
         manual_control.buttons = 0;
         
     }
@@ -521,6 +559,7 @@ void MainWindow::on_actionMenu_triggered()
 
 void MainWindow::modeComboBox_currentIndexChanged(int index)
 {
+            //Change Mode of the Vehicle using manual_control.buttons
     if (!AS::as_api_check_vehicle(currentVehicle))
     {
         qDebug() << "vehicle: " << currentVehicle << "is not ready!";
@@ -530,18 +569,21 @@ void MainWindow::modeComboBox_currentIndexChanged(int index)
     switch (index)
     {
     case 0:
-        // AS::as_api_set_mode(currentVehicle, AS::MANUAL);
-	manual_control.buttons = 2;
+        //AS::as_api_set_mode(currentVehicle, AS::MANUAL);    //Mode changed using API
+        manual_control.buttons = 2;
+        modeComboBox->setText("Manual");                        //Vehicle Mode Change using Button
         break;
 
     case 1:
-        // AS::as_api_set_mode(currentVehicle, AS::STABILIZE);
-	manual_control.buttons = 8;
+        //AS::as_api_set_mode(currentVehicle, AS::STABILIZE);   //Mode changed using API
+        manual_control.buttons = 8;
+        modeComboBox->setText("Stabilise");                     //Vehicle Mode Change using Button
         break;
 
     case 2:
-        // AS::as_api_set_mode(currentVehicle, AS::ALT_HOLD);
-	manual_control.buttons = 4;
+        //AS::as_api_set_mode(currentVehicle, AS::ALT_HOLD);   //Mode changed using API
+        manual_control.buttons = 4;
+        modeComboBox->setText("Depth Hold");                //Vehicle Mode Change using Button
         break;
 
     default:
@@ -551,6 +593,7 @@ void MainWindow::modeComboBox_currentIndexChanged(int index)
 
 void MainWindow::armCheckBox_stateChanged(int state)
 {
+            //Change vehicle arm / disarm
     if (!AS::as_api_check_vehicle(currentVehicle))
     {
         qDebug() << "vehicle: " << currentVehicle << "is not ready!";
