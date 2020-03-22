@@ -34,17 +34,21 @@ MainWindow::MainWindow(QWidget *parent)
 	
 	firstRun = false;  // first run flag 2020/02/20
 
-    keyControlValue.forward = 400;
-    keyControlValue.backward = -400;
-    keyControlValue.leftward = -400;
-    keyControlValue.rightward = 400;
-    keyControlValue.upward = 700;
-    keyControlValue.downward = 300;
-    keyControlValue.turnLeft = -400;
-    keyControlValue.turnRight = 400;
+    keyControlValue.forward = 500;
+    keyControlValue.backward = -500;
+    keyControlValue.leftward = -500;
+    keyControlValue.rightward = 500;
+    keyControlValue.upward = 800;
+    keyControlValue.downward = 200;
+    keyControlValue.turnLeft = -600;
+    keyControlValue.turnRight = 600;
+    keyControlValue.turnLeftM = -300;
+    keyControlValue.turnRightM = 300;
 
     m_modeIndex = 1;  
     IdleTime = 1;                          //Changing Combobox to Buttton
+   
+
 
     on_actionVideo_triggered();
 
@@ -296,48 +300,119 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 
     if (event->key() == Qt::Key_W)
     {
+        if (armCheckBox->checkState() == Qt::Unchecked)
+        {
+            armCheckBox->setChecked(true);
+            armCheckBox_stateChanged(Qt::Checked);   
+            return;
+         }
+        
         qDebug() << "You Pressed Key W";
         pressedKey.W = true;
         manual_control.z = keyControlValue.upward;
     }
     else if (event->key() == Qt::Key_S)
     {
+        if (armCheckBox->checkState() == Qt::Unchecked)
+        {
+            armCheckBox->setChecked(true);
+            armCheckBox_stateChanged(Qt::Checked);   
+            return;
+         }
         qDebug() << "You Pressed Key S";
         pressedKey.S = true;
         manual_control.z = keyControlValue.downward;
     }
     else if (event->key() == Qt::Key_A)
     {
+        if (armCheckBox->checkState() == Qt::Unchecked)
+        {
+            armCheckBox->setChecked(true);
+            armCheckBox_stateChanged(Qt::Checked);   
+            return;
+         }
         qDebug() << "You Pressed Key A";
         pressedKey.A = true;
-        manual_control.r = keyControlValue.turnLeft;
+        if (m_modeIndex == 0)
+        {
+            manual_control.r = keyControlValue.turnLeftM;     
+        }
+        else if (m_modeIndex == 1)
+        {
+            manual_control.r = keyControlValue.turnLeft;     
+        }
+        else if (m_modeIndex == 2)
+        {
+            manual_control.r = keyControlValue.turnLeft;     
+        }
     }
     else if (event->key() == Qt::Key_D)
     {
+        if (armCheckBox->checkState() == Qt::Unchecked)
+        {
+            armCheckBox->setChecked(true);
+            armCheckBox_stateChanged(Qt::Checked);   
+            return;
+         }
         qDebug() << "You Pressed Key D";
         pressedKey.D = true;
-        manual_control.r = keyControlValue.turnRight;
+        if (m_modeIndex == 0)
+        {
+            manual_control.r = keyControlValue.turnRightM;     
+        }
+        else if (m_modeIndex == 1)
+        {
+           manual_control.r = keyControlValue.turnRight;     
+        }
+        else if (m_modeIndex == 2)
+        {
+            manual_control.r = keyControlValue.turnRight;     
+        }
     }
     else if (event->key() == Qt::Key_Up)
     {
+        if (armCheckBox->checkState() == Qt::Unchecked)
+        {
+            armCheckBox->setChecked(true);
+            armCheckBox_stateChanged(Qt::Checked);   
+            return;
+         }
         qDebug() << "You Pressed Key Up";
         pressedKey.Up = true;
         manual_control.x = keyControlValue.forward;
     }
     else if (event->key() == Qt::Key_Down)
     {
+        if (armCheckBox->checkState() == Qt::Unchecked)
+        {
+            armCheckBox->setChecked(true);
+            armCheckBox_stateChanged(Qt::Checked);   
+            return;
+         }
         qDebug() << "You Pressed Key Down";
         pressedKey.Down = true;
         manual_control.x = keyControlValue.backward;
     }
     else if (event->key() == Qt::Key_Left)
     {
+        if (armCheckBox->checkState() == Qt::Unchecked)
+        {
+            armCheckBox->setChecked(true);
+            armCheckBox_stateChanged(Qt::Checked);   
+            return;
+         }
         qDebug() << "You Pressed Key Left";
         pressedKey.Left = true;
         manual_control.y = keyControlValue.leftward;
     }
     else if (event->key() == Qt::Key_Right)
     {
+        if (armCheckBox->checkState() == Qt::Unchecked)
+        {
+            armCheckBox->setChecked(true);
+            armCheckBox_stateChanged(Qt::Checked);   
+            return;
+         }
         qDebug() << "You Pressed Key Right";
         pressedKey.Right = true;
         manual_control.y = keyControlValue.rightward;
@@ -347,21 +422,45 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 	
 	else if (event->key() == Qt::Key_R)
      {
+         if (armCheckBox->checkState() == Qt::Unchecked)
+        {
+            armCheckBox->setChecked(true);
+            armCheckBox_stateChanged(Qt::Checked);   
+            return;
+         }
          qDebug() << "You Pressed Key R";
          manual_control.buttons = 1024;
      }
      else if (event->key() == Qt::Key_F)
      {
+         if (armCheckBox->checkState() == Qt::Unchecked)
+        {
+            armCheckBox->setChecked(true);
+            armCheckBox_stateChanged(Qt::Checked);   
+            return;
+         }
          qDebug() << "You Pressed Key F";
          manual_control.buttons = 512;
      }
    else if (event->key() == Qt::Key_T)
      {
+         if (armCheckBox->checkState() == Qt::Unchecked)
+        {
+            armCheckBox->setChecked(true);
+            armCheckBox_stateChanged(Qt::Checked);   
+            return;
+         }
          qDebug() << "You Pressed Key Plus";
          manual_control.buttons = 16384;
      }
      else if (event->key() == Qt::Key_G)
      {
+         if (armCheckBox->checkState() == Qt::Unchecked)
+        {
+            armCheckBox->setChecked(true);
+            armCheckBox_stateChanged(Qt::Checked);   
+            return;
+         }
          qDebug() << "You Pressed Key Minus";
          manual_control.buttons = 8192;
      }

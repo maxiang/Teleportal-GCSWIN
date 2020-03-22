@@ -7,8 +7,11 @@ int main(int argc, char *argv[])
     gst_init (&argc, &argv);
     QApplication a(argc, argv);
     MainWindow w;
-    //w.showMaximized();
-    w.showFullScreen();                     //FULL SCREEN
-    w.resizeWindowsManual();
+    w.showMaximized();
+    //(Qt::FramelessWindowHint)
+    w.setWindowFlags(Qt::FramelessWindowHint);
+    //w.showFullScreen();                     //FULL SCREEN
+    //w.resizeWindowsManual();
+    w.show();
     return a.exec();
 }

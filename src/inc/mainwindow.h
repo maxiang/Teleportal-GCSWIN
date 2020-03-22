@@ -64,8 +64,7 @@ private:
 
     int m_modeIndex; 
     uint IdleTime;                        //Changin Combobox to Button
-
-	bool	firstRun; // first run flag 2020/02/20
+	bool	firstRun;                     // first run flag 2020/02/20
 
     typedef struct
     {
@@ -102,6 +101,9 @@ private:
         int16_t downward;
         int16_t turnLeft;
         int16_t turnRight;
+        int16_t turnLeftM;
+        int16_t turnRightM;
+
     } keyControlValue_t;
 
     keyControlValue_t keyControlValue;
