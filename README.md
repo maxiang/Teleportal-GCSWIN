@@ -1,6 +1,8 @@
 ## NEW BUILD INSTRUCTIONS
 
 ``` bash
+Install msys2 and then run:
+
 # update repo data
 pacman -Syu
 # base
